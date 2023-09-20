@@ -5,17 +5,24 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Post;
 use Illuminate\Support\Facades\Validator;
+// use App\Http\Requests\PostRequest;
 
 class PostController extends Controller
 {
 
     public function index() {
-        $post = Post::orderBy('created_at', 'desc')
-                        ->with('comments')
+        $posts = Post::orderBy('created_at', 'desc')
+                        ->with(['comments','categories'])
                         ->get();
         
+                        
+        // $filtered = $posts->filter(function($value) {
+        //     return $value->id % 2 === 0;
+        // });
+        // return $filtered;
+
         return response()->json( 
-            $post
+            $posts
         );
     }
     
@@ -34,14 +41,27 @@ class PostController extends Controller
                 'message' => '데이터 없음'
                 ], 404);
         }
+        $params = $request->only([
+            'subject', 'content'
+        ]);
 
-        $subject = $request->input('subject');
-        $content = $request->input('content');
+        $post = Post::create($params);
 
-        $post = new Post();
-        $post->subject = $subject;
-        $post->content = $content;
-        $post->save();
+        $ids = $request->input('category_ids');
+        $post->categories()->sync($ids);
+
+        // dd($request->input('category_id'));
+        
+        // $subject = $request->input('subject');
+        // $content = $request->input('content');
+
+        // $post = new Post();
+        // $post->subject = $subject;
+        // $post->content = $content;
+        // $post->save();
+
+        
+
         return response()->json($post);
     }
 
@@ -75,7 +95,10 @@ class PostController extends Controller
         if ($subject) $post->subject = $subject;
         if ($content) $post->content = $content;
 
+        $ids = $request->input('category_ids');
+
         $post->save();
+        $post->categories()->sync($ids);
 
         return response()->json(
             $post

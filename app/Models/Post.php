@@ -9,9 +9,19 @@ class Post extends Model
 {
     use HasFactory;
 
+    protected $fillable = [
+        'subject',
+        'content'
+    ];
     public function comments() {
         return $this->hasmany(
             \App\Models\Comment::class
+        );
+    }
+
+    public function categories() {
+        return $this->belongsToMany(
+          \App\Models\Category::class  
         );
     }
 }
