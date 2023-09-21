@@ -11,6 +11,18 @@ class AuthController extends Controller
 
     public function signUp(Request $request) {
 
+        $validator = Validator::make($request->all(), [
+            'name' => 'required',
+            'email' => 'required|email',
+            'password' => 'required',
+            'password_confirmation' => 'required|same:password'
+        ]);
+        if ($validator->fails()) {
+            return response()->json([
+                'message' => '데이터 없음'
+                ], 404);
+        }
+
         $params = $request->only([
             'name', 'email', 'password'
         ]);
