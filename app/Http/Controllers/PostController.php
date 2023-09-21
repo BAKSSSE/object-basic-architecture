@@ -12,7 +12,7 @@ class PostController extends Controller
 
     public function index() {
         $posts = Post::orderBy('created_at', 'desc')
-                        ->with(['comments','categories'])
+                        ->with(['comments','categories', 'user'])
                         ->paginate(10);
 
         logger($posts);
@@ -46,10 +46,14 @@ class PostController extends Controller
             'subject', 'content'
         ]);
 
+        $params['user_id'] = $request->user()->id;
+
         $post = Post::create($params);
 
         $ids = $request->input('category_ids');
         $post->categories()->sync($ids);
+
+        $result = Post::where('id', $post->id)->with(['user','categories'])->get();
 
         // dd($request->input('category_id'));
         
@@ -63,7 +67,7 @@ class PostController extends Controller
 
         
 
-        return response()->json($post);
+        return response()->json($result);
     }
 
     public function read($id) {

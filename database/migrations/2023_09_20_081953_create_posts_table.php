@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::create('posts', function (Blueprint $table) {
             $table->id();
+            $table->bigInteger('user_id');
             $table->string('subject', 100);
             $table->longText('content');
             $table->timestamps();

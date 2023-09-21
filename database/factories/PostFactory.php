@@ -19,9 +19,9 @@ class PostFactory extends Factory
     public function definition(): array
     {
         return [
-            'subject'=> $this->faker->sentence(),
-            'content'=> $this->faker->paragraphs(3, true)
-
+            'user_id' => rand(1, 10),
+            'subject' => $this->faker->sentence(),
+            'content' => $this->faker->paragraphs(3, true)
         ];
     }
 }
