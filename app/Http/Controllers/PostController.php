@@ -13,8 +13,9 @@ class PostController extends Controller
     public function index() {
         $posts = Post::orderBy('created_at', 'desc')
                         ->with(['comments','categories'])
-                        ->get();
-        
+                        ->paginate(10);
+
+        logger($posts);
                         
         // $filtered = $posts->filter(function($value) {
         //     return $value->id % 2 === 0;
