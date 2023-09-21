@@ -12,7 +12,7 @@ class PostController extends Controller
 
     public function index() {
         $posts = Post::orderBy('created_at', 'desc')
-                        ->with(['comments','categories', 'user'])
+                        ->with(['comments','categories','comments.user', 'user'])
                         ->paginate(10);
 
         logger($posts);
@@ -72,7 +72,7 @@ class PostController extends Controller
 
     public function read($id) {
         // $post = Post::find($id);
-        $post = Post::where('id', $id)->with('comments')->first();
+        $post = Post::where('id', $id)->with('comments', 'comments.user', 'user')->first();
         
         if (!$post) {
             return response()->json([
@@ -94,6 +94,15 @@ class PostController extends Controller
                 'message' => '데이터 없음'
                 ], 404);
         }
+
+        $user = $request->user();
+
+        if ($user->id != $post->user_id) {
+            return response()->json([
+                'message' => '삭제 할 수 없습니다.'
+            ], 403);
+        }
+
         $subject = $request->input('subject');
         $content = $request->input('content');
 
@@ -111,13 +120,21 @@ class PostController extends Controller
 
     }
 
-    public function delete($id) {
+    public function delete(Request $request, $id) {
         $post = Post::find($id);
         if (!$post) {
             return response()->json([
                 // 'result' => true,
                 'message' => '데이터 없음'
                 ], 404);
+        }
+
+
+        $user = $request->user();
+        if ($user->id != $post->user_id) {
+            return response()->json([
+                'message' => '삭제 할 수 없습니다.'
+            ], 403);
         }
 
         $post->delete();
