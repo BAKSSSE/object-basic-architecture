@@ -3,7 +3,7 @@ namespace App\Services\Movie;
 use Brick\Math\BigDecimal;
 
 /**
- * 금액과 관련된 다양한 계싼을 구현 하는 클래스 
+ * 금액과 관련된 다양한 계산을 구현 하는 클래스 
  */
 class Money {
     public static $ZERO = 0;

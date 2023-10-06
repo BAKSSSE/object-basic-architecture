@@ -1,7 +1,7 @@
 <?php 
 namespace App\Services\Movie;
 use App\Services\Movie\Movie;
-
+use App\Services\Movie\Customer;
 /**
  * 사용자들이 예매하는 대상인 '상영' 클래스
  */
@@ -41,7 +41,7 @@ class Screening {
      */
     public function reserve(Customer $customer, int $audienceCount)
     {
-        return new Reservation($customer, $this, calculateFee($audienceCount), $audienceCount);
+        return new Reservation($customer, $this, $this->calculateFee($audienceCount), $audienceCount);
     }
 
     /**
@@ -50,7 +50,7 @@ class Screening {
      */
     public function calculateFee(int $audienceCount)
     {
-        return $this->movie->calculateMovieFee($this).times($audienceCount);
+        return $this->movie->calculateMovieFee($this)->times($audienceCount);
     }
 
 
