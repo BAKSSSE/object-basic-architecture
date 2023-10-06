@@ -21,4 +21,5 @@ class Reservation {
         $this->audienceCount = $audienceCount;
 
     }
+    
 }

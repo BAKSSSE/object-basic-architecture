@@ -5,7 +5,7 @@ namespace App\Services\Movie\Pricing;
  * 할인 조건 : 기간 조건
  * 상영 시작시간이 특정한 기간안에 포함되는지 여부 판단
  */
-class SequenceCondition {
+class PeriodCondition {
     private $dayOfWeek;
     private $startTime;
     private $endTime;
