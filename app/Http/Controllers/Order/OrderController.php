@@ -9,11 +9,50 @@ use App\Services\Order\OrderService;
 class OrderController extends Controller
 {
 
-    /** 주문 하기 */
-    public function order()
+
+    /**
+     * 주문 확인 (@Post /orders/orderConfirm)
+     * 
+     */
+    public function orderConfirm(Request $request)
+    {
+        // $request->input('ooo');
+        $request = [
+            'goods_idx' => [
+                1,2,3
+            ]
+        ];
+
+        $products = [];
+
+        $productService = new productService();
+        
+        foreach ($request['goods_idx'] as $idx) {
+            $product = $productService->getProduct($idx);
+            if ($product == null || empty($product)) {
+                throw new \Exception($idx . "no product");
+            }
+            array_push($products, $productService->getProduct($idx)); 
+        }
+
+
+
+        return response()->json([
+            'totalAmounts' => '10000'
+        ]);
+
+    }
+    
+
+    /** 
+     * 주문 하기 (@Post /orders/order)
+     * 
+     */
+    public function order(Request $request)
     {
         // $request post 값 
-
+        // $request->input('ooo');
+        
         $request = [
             'goods_idx' => [
                 1,2,3
@@ -27,18 +66,33 @@ class OrderController extends Controller
             ]
         ];
 
+        // 주문완료 프로세스
         $orderService = new OrderService();
-        $orderService->placeOrder($request);
+        $orderNumber = $orderService->placeOrder($request);
 
-        // return view "/order/orderComplate"
-
+        return response()->json([
+            'orderNumber' => $orderNumber
+        ]);
+        // return view('order.orderCompate', []);
 
     }
 
-    public function cancel()
+    /**
+     * 주문 취소하기 /my/orders/{orderNo}/cancel
+     */
+    public function cancel(Request $request)
     {
-        // $orderClass = new Order();
-        // $orderClass->cancel();
+        $request = [
+            'order_idx' => '1',
+            'member_idx' => '10'
+        ];
+        // $orderService = new cancelOrderService();
+        $orderService = new OrderService();
+        $orderService->cancel('order_idx', 'member_idx');
+        return response()->json([
+            'message' => '주문 취소 완료',
+            'orderNumber' => $orderNumber
+        ]);
 
     }
 

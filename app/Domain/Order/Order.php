@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Domain;
+namespace App\Domain\Order;
 use App\Domain\Order\OrderLine; 
 
 class Order
