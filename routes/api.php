@@ -7,7 +7,9 @@ use App\Http\Controllers\CommentController;
 use App\Http\Controllers\CategoryController;
 
 use App\Http\Controllers\MovieController;
+
 use App\Http\Controllers\Order\OrderController;
+use App\Http\Controllers\Member\MemberController;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -27,7 +29,18 @@ Route::middleware('auth:sanctum')->get('/users', function (Request $request) {
     return $request->user();
 });
 
+Route::get('/member/changePassword', [MemberController::class, 'changePassword']);
+
 Route::get('/order', [OrderController::class, 'order']);
+
+
+
+
+
+
+
+
+
 
 
 Route::get('/ping', [AppController::class, 'ping']);

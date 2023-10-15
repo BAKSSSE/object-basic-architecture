@@ -8,14 +8,14 @@ use App\Services\Order\OrderService;
 
 class OrderController extends Controller
 {
-
-
     /**
      * 주문 확인 (@Post /orders/orderConfirm)
      * 
      */
     public function orderConfirm(Request $request)
     {
+        // validate
+        
         // $request->input('ooo');
         $request = [
             'goods_idx' => [
@@ -36,13 +36,11 @@ class OrderController extends Controller
         }
 
 
-
         return response()->json([
             'totalAmounts' => '10000'
         ]);
 
     }
-    
 
     /** 
      * 주문 하기 (@Post /orders/order)
@@ -50,10 +48,12 @@ class OrderController extends Controller
      */
     public function order(Request $request)
     {
+        // validate
+
         // $request post 값 
         // $request->input('ooo');
         
-        $request = [
+        $order = [
             'goods_idx' => [
                 1,2,3
             ],
@@ -68,7 +68,7 @@ class OrderController extends Controller
 
         // 주문완료 프로세스
         $orderService = new OrderService();
-        $orderNumber = $orderService->placeOrder($request);
+        $orderNumber = $orderService->placeOrder($order);
 
         return response()->json([
             'orderNumber' => $orderNumber
@@ -82,6 +82,8 @@ class OrderController extends Controller
      */
     public function cancel(Request $request)
     {
+        // validate
+
         $request = [
             'order_idx' => '1',
             'member_idx' => '10'
